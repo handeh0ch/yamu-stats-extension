@@ -16,7 +16,7 @@ app.get('/', (req, res) => res.send('Express on Vercel'));
 
 apiRouter.get('/artist/:name', async (req, res) => {
     const { name } = req.params;
-    const { serviceName } = req.query;
+    const { service: serviceName } = req.query;
     const service = statsSource.get(serviceName);
 
     if (!service) {
@@ -36,7 +36,7 @@ apiRouter.get('/artist/:name', async (req, res) => {
 });
 
 apiRouter.get('/album', async (req, res) => {
-    const { artist, name, serviceName } = req.query;
+    const { artist, name, service: serviceName } = req.query;
     const service = statsSource.get(serviceName);
 
     if (!service) {
@@ -56,7 +56,7 @@ apiRouter.get('/album', async (req, res) => {
 });
 
 apiRouter.get('/track', async (req, res) => {
-    const { artist, name, serviceName } = req.query;
+    const { artist, name, service: serviceName } = req.query;
     const service = statsSource.get(serviceName);
 
     if (!service) {
