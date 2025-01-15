@@ -12,6 +12,8 @@ if (!LASTFM_API) {
     process.exit(1);
 }
 
+app.get('/', (req, res) => res.send('Express on Vercel'));
+
 apiRouter.get('/artist/:name', async (req, res) => {
     const { name } = req.params;
     const { serviceName } = req.query;
