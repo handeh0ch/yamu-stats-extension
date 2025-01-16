@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const { PORT, LASTFM_API } = require('./constants');
 const { statsSource } = require('./source/source');
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: 'https://music.yandex.ru' }));
 const apiRouter = express.Router();
 
 if (!LASTFM_API) {
