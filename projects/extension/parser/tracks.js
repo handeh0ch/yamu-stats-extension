@@ -1,3 +1,11 @@
+let api;
+let elementCreator;
+
+(async function () {
+    api = await import(chrome.runtime.getURL('api.js'));
+    elementCreator = await import(chrome.runtime.getURL('element-creator.js'));
+})();
+
 const parserMap = new Map();
 const trackSet = new Set();
 
@@ -31,6 +39,7 @@ function observeOld(designStyle) {
         Array.from(document.querySelectorAll('.d-track')).map((node) => {
             const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
             const title = node.querySelector('.d-track__title')?.textContent.trim();
+            trackSet.add(`${artist} - ${title}`);
 
             return { artist, title, node };
         })
@@ -71,43 +80,23 @@ function parseOld(newTracks) {
                 return Promise.resolve();
             }
 
-            return fetch(
-                `https://yamu-stats-extension-api.vercel.app/api/track?artist=${artist}&name=${title}&service=lastfm`
-            )
+            return api
+                .getTrack(artist, title)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.message) {
-                        data.playcount = 'No data :(';
+                        data.playcount = 'No data';
                     }
 
                     trackSet.add(`${artist} - ${title}`);
 
                     node.insertBefore(
-                        createTrackPlayCountElementOld(data.playcount),
+                        elementCreator.createTrackPlayCountElementOld(data.playcount),
                         node.querySelector('.d-track__overflowable-column')
                     );
                 });
         })
     );
-}
-
-function createTrackPlayCountElementOld(playCount, title) {
-    const playCountElement = document.createElement('div');
-    playCountElement.className = 'd-track__quasistatic-column';
-
-    const nameElement = document.createElement('div');
-    nameElement.className = 'd-track__name';
-    nameElement.title = title;
-
-    const playCountText = document.createElement('span');
-    playCountText.className = 'd-track__title';
-    playCountText.style.color = '#777';
-    playCountText.textContent = playCount;
-
-    nameElement.appendChild(playCountText);
-    playCountElement.appendChild(nameElement);
-
-    return playCountElement;
 }
 
 function observeNew(designStyle) {

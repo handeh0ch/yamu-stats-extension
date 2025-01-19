@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "YaMu Stats",
-    "description": "Enhanced statistic from other services like Last.fm, Spotify, etc. for Yandex Music",
+    "description": "Enhanced statistic from other services like Last.fm, Spotify, etc. for Yandex Music.",
     "version": "1.0.0",
     "permissions": ["scripting", "tabs"],
     "host_permissions": ["https://music.yandex.ru/*"],
@@ -14,7 +14,7 @@
     "web_accessible_resources": [
         {
             "matches": ["<all_urls>"],
-            "resources": ["parser/tracks.js", "parser/albums.js"]
+            "resources": ["api.js", "element-creator.js", "parser/tracks.js", "parser/albums.js"]
         }
     ],
     "author": "handeh0ch",
