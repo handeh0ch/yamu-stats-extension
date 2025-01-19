@@ -30,8 +30,8 @@ function handleUrlChange(url, designStyle) {
         }
 
         currentAlbumId = albumId;
-        albums.parseAlbum('old');
-        albums.parseAlbumTracks('old');
+        albums.parseAlbum(designStyle);
+        albums.parseAlbumTracks(designStyle);
 
         return;
     }
@@ -39,10 +39,10 @@ function handleUrlChange(url, designStyle) {
     const artistMatch = url.match(/\/artist\/\d+/);
     if (artistMatch) {
         currentAlbumId = null;
-        artists.parseArtist('old');
+        artists.parseArtist(designStyle);
 
         if (url.match(/\/artist\/\d+\/tracks/)) {
-            artists.parseArtistTracks('old');
+            artists.parseArtistTracks(designStyle);
         }
     }
 }

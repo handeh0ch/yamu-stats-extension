@@ -21,21 +21,17 @@ parserMap.set('new', {
 
 export function parse(designStyle) {
     trackSet.clear();
-    return parserMap.get(designStyle).getObserver(designStyle);
+    return parserMap.get(designStyle).getObserver();
 }
 
-function getParser(designStyle) {
-    return parserMap.get(designStyle);
-}
-
-function observeOld(designStyle) {
+function observeOld() {
     let trackList = null;
 
     while (trackList === null) {
         trackList = document.querySelector('.lightlist__cont');
     }
 
-    getParser(designStyle).parse(
+    parseOld(
         Array.from(document.querySelectorAll('.d-track')).map((node) => {
             const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
             const title = node.querySelector('.d-track__title')?.textContent.trim();
@@ -61,7 +57,7 @@ function observeOld(designStyle) {
         });
 
         if (newTracks.length > 0) {
-            getParser(designStyle).parse(newTracks);
+            parseOld(newTracks);
         }
     });
 
