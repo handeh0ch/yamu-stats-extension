@@ -14,7 +14,7 @@
     "web_accessible_resources": [
         {
             "matches": ["<all_urls>"],
-            "resources": ["api.js", "element-creator.js", "parser/tracks.js", "parser/albums.js"]
+            "resources": ["api.js", "element-creator.js", "parser/tracks.js", "parser/albums.js", "parser/artists.js"]
         }
     ],
     "author": "handeh0ch",

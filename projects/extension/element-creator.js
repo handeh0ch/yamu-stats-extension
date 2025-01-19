@@ -1,6 +1,6 @@
 export function createTrackPlayCountElementOld(playCount, title) {
-    const playCountElement = document.createElement('div');
-    playCountElement.className = 'd-track__quasistatic-column';
+    const container = document.createElement('div');
+    container.className = 'd-track__quasistatic-column';
 
     const nameElement = document.createElement('div');
     nameElement.className = 'd-track__name';
@@ -12,9 +12,9 @@ export function createTrackPlayCountElementOld(playCount, title) {
     playCountText.textContent = playCount;
 
     nameElement.appendChild(playCountText);
-    playCountElement.appendChild(nameElement);
+    container.appendChild(nameElement);
 
-    return playCountElement;
+    return container;
 }
 
 export function createAlbumPlayCountElementOld(playCount) {
@@ -47,9 +47,9 @@ export function createAlbumPlayCountElementOld(playCount) {
 }
 
 export function createAlbumTrackPlayCountElementOld(playCount, title) {
-    const playCountElement = document.createElement('div');
-    playCountElement.className = 'd-track__quasistatic-column';
-    playCountElement.style.flex = '0 1 10%';
+    const container = document.createElement('div');
+    container.className = 'd-track__quasistatic-column';
+    container.style.flex = '0 1 10%';
 
     const nameElement = document.createElement('div');
     nameElement.className = 'd-track__name';
@@ -61,7 +61,40 @@ export function createAlbumTrackPlayCountElementOld(playCount, title) {
     playCountText.innerHTML = `&#9;|&#9;${playCount}`;
 
     nameElement.appendChild(playCountText);
-    playCountElement.appendChild(nameElement);
+    container.appendChild(nameElement);
 
-    return playCountElement;
+    return container;
+}
+
+export function createArtistPlayCountElementOld(playCount) {
+    const container = document.createElement('div');
+    container.className = 'page-artist__summary typo deco-typo-secondary';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+
+    const descriptionSpan = document.createElement('span');
+    descriptionSpan.textContent = 'Last.fm';
+    descriptionSpan.style.color = '#777';
+
+    const separator = document.createElement('span');
+    separator.style.display = 'inline-block';
+    separator.style.width = '2px';
+    separator.style.height = '2px';
+    separator.style.margin = '-2px 6px 0';
+    separator.style.content = '""';
+    separator.style.overflow = 'hidden';
+    separator.style.verticalAlign = 'middle';
+    separator.style.backgroundColor = '#d8d8d8';
+    separator.style.borderRadius = '100%';
+    separator.innerHTML = '&nbsp;';
+
+    const playCountSpan = document.createElement('span');
+    playCountSpan.textContent = playCount;
+    playCountSpan.style.color = '#777';
+
+    container.appendChild(playCountSpan);
+    container.appendChild(separator);
+    container.appendChild(descriptionSpan);
+
+    return container;
 }
