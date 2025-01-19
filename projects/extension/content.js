@@ -1,8 +1,7 @@
 let tracks;
 let albums;
 let artists;
-let currentAlbumId = null,
-    currentArtistId = null;
+let currentAlbumId = null;
 
 (async function () {
     tracks = await import(chrome.runtime.getURL('parser/tracks.js'));
@@ -40,16 +39,10 @@ function handleUrlChange(url, designStyle) {
     const artistMatch = url.match(/\/artist\/\d+/);
     if (artistMatch) {
         currentAlbumId = null;
-
-        const artistId = artistMatch[0].split('/')[2];
-        if (currentArtistId === artistId) {
-            return;
-        }
-
-        currentArtistId = artistId;
         artists.parseArtist('old');
 
         if (url.match(/\/artist\/\d+\/tracks/)) {
+            artists.parseArtistTracks('old');
         }
     }
 }

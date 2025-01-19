@@ -26,7 +26,11 @@ function getParser(designStyle) {
 }
 
 function parseArtistOld() {
-    const artist = document.querySelector('.page-artist__title').textContent.trim();
+    const artist = document.querySelector('.page-artist__title')?.textContent.trim();
+
+    if (!artist) {
+        return;
+    }
 
     api.getArtist(artist)
         .then((response) => response.json())
@@ -48,23 +52,53 @@ function parseAlbumTracksOld() {
         trackList = document.querySelector('.lightlist__cont');
     }
 
-    const artists = document.querySelector('.d-artists > a').textContent.trim();
+    const artist = document.querySelector('.page-artist__title')?.textContent.trim();
+
+    if (!artist) {
+        return;
+    }
 
     Promise.all(
         Array.from(document.querySelectorAll('.d-track')).map((node) => {
-            const title = node.querySelector('.d-track__name > a')?.textContent.trim();
+            const title = node.querySelector('.d-track__title')?.textContent.trim();
 
             return api
-                .getTrack(artists, title)
+                .getTrack(artist, title)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.message) {
                         data.playcount = 'No data';
                     }
 
-                    node.querySelector('.d-track__overflowable-column').insertAdjacentElement(
-                        'beforeend',
-                        elementCreator.createAlbumTrackPlayCountElementOld(data.playcount, title)
+                    node.insertBefore(
+                        elementCreator.createTrackPlayCountElementOld(data.playcount),
+                        node.querySelector('.d-track__overflowable-column')
+                    );
+                });
+        })
+    );
+}
+
+function parseOld(newTracks) {
+    Promise.all(
+        newTracks.map(({ artist, title, node }) => {
+            if (!artist || !title) {
+                return Promise.resolve();
+            }
+
+            return api
+                .getTrack(artist, title)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.message) {
+                        data.playcount = 'No data';
+                    }
+
+                    trackSet.add(`${artist} - ${title}`);
+
+                    node.insertBefore(
+                        elementCreator.createTrackPlayCountElementOld(data.playcount),
+                        node.querySelector('.d-track__overflowable-column')
                     );
                 });
         })

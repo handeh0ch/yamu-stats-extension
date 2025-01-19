@@ -31,16 +31,16 @@ function getParser(designStyle) {
 }
 
 function parseAlbumOld() {
-    let albumData = null;
+    const albumData = document.querySelector('.d-generic-page-head__main-top');
 
-    while (albumData === null) {
-        albumData = document.querySelector('.d-generic-page-head__main-top');
+    const title = albumData.querySelector('.page-album__title > span, .page-album__title > a')?.textContent.trim();
+    const artist = albumData.querySelector('.d-artists > a')?.textContent.trim();
+
+    if (!title || !artist) {
+        return;
     }
 
-    const title = albumData.querySelector('.page-album__title > span, .page-album__title > a').textContent.trim();
-    const artists = albumData.querySelector('.d-artists > a').textContent.trim();
-
-    api.getAlbum(artists, title)
+    api.getAlbum(artist, title)
         .then((response) => response.json())
         .then((data) => {
             if (data.message) {
@@ -61,14 +61,18 @@ function parseAlbumTracksOld() {
         trackList = document.querySelector('.lightlist__cont');
     }
 
-    const artists = document.querySelector('.d-artists > a').textContent.trim();
+    const artist = document.querySelector('.d-artists > a')?.textContent.trim();
+
+    if (!artist) {
+        return;
+    }
 
     Promise.all(
         Array.from(document.querySelectorAll('.d-track')).map((node) => {
             const title = node.querySelector('.d-track__name > a')?.textContent.trim();
 
             return api
-                .getTrack(artists, title)
+                .getTrack(artist, title)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.message) {
