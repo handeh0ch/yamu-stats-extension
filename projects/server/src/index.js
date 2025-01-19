@@ -34,7 +34,7 @@ apiRouter.get('/artist/:name', async (req, res) => {
         let data = await redisClient.fromCache(cacheKey);
 
         if (data === null) {
-            data = await service.getArtist(artist, name);
+            data = await service.getArtist(name);
             await redisClient.toCache(cacheKey, data);
         }
 
