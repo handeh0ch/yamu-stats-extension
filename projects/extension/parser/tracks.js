@@ -1,30 +1,58 @@
 const parserMap = new Map();
-parserMap.set('old', oldDesignParser);
-parserMap.set('new', newDesignParser);
+const trackSet = new Set();
 
-export function parser(designStyle) {
+parserMap.set('old', {
+    getObserver: observeOld,
+    parse: parseOld,
+});
+
+parserMap.set('new', {
+    getObserver: observeNew,
+    parse: parseNew,
+});
+
+export function parse(designStyle) {
+    trackSet.clear();
+    return parserMap.get(designStyle).getObserver(designStyle);
+}
+
+function getParser(designStyle) {
+    return parserMap.get(designStyle);
+}
+
+function observeOld(designStyle) {
     let trackList = null;
 
     while (trackList === null) {
         trackList = document.querySelector('.lightlist__cont');
     }
 
-    const trackSet = new WeakSet();
+    getParser(designStyle).parse(
+        Array.from(document.querySelectorAll('.d-track')).map((node) => {
+            const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
+            const title = node.querySelector('.d-track__title')?.textContent.trim();
+
+            return { artist, title, node };
+        })
+    );
 
     const observer = new MutationObserver((mutations) => {
         const newTracks = [];
 
         mutations.forEach((mutation) => {
             Array.from(mutation.addedNodes).forEach((node) => {
-                if (node.nodeType === 1 && !trackSet.has(node)) {
-                    trackSet.add(node);
-                    newTracks.push(node);
+                const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
+                const title = node.querySelector('.d-track__title')?.textContent.trim();
+
+                if (node.nodeType === Node.ELEMENT_NODE && !trackSet.has(`${artist} - ${title}`)) {
+                    trackSet.add(`${artist} - ${title}`);
+                    newTracks.push({ artist, title, node });
                 }
             });
         });
 
         if (newTracks.length > 0) {
-            getParser(designStyle)(newTracks);
+            getParser(designStyle).parse(newTracks);
         }
     });
 
@@ -36,45 +64,40 @@ export function parser(designStyle) {
     return observer;
 }
 
-function getParser(designStyle) {
-    return parserMap.get(designStyle);
-}
+function parseOld(newTracks) {
+    Promise.all(
+        newTracks.map(({ artist, title, node }) => {
+            if (!artist || !title) {
+                return Promise.resolve();
+            }
 
-function oldDesignParser(newNodes) {
-    newNodes.forEach((node) => {
-        const name = node.querySelector('.d-track__title')?.textContent.trim();
-        const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
-
-        if (name && artist) {
-            fetch(`https://yamu-stats-extension-api.vercel.app/api/track?artist=${artist}&name=${name}&service=lastfm`)
+            return fetch(
+                `https://yamu-stats-extension-api.vercel.app/api/track?artist=${artist}&name=${title}&service=lastfm`
+            )
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.message) {
                         data.playcount = 'No data :(';
                     }
 
+                    trackSet.add(`${artist} - ${title}`);
+
                     node.insertBefore(
                         createTrackPlayCountElementOld(data.playcount),
                         node.querySelector('.d-track__overflowable-column')
                     );
                 });
-        }
-    });
+        })
+    );
 }
 
-/**
- * Create an playcount element for track
- * Used for old Yandex Music design
- * @param {string} playCount playCount
- * @returns {HTMLDivElement}
- */
-function createTrackPlayCountElementOld(playCount) {
+function createTrackPlayCountElementOld(playCount, title) {
     const playCountElement = document.createElement('div');
     playCountElement.className = 'd-track__quasistatic-column';
 
     const nameElement = document.createElement('div');
     nameElement.className = 'd-track__name';
-    nameElement.title = 'Save Me feat. Helene';
+    nameElement.title = title;
 
     const playCountText = document.createElement('span');
     playCountText.className = 'd-track__title';
@@ -87,6 +110,10 @@ function createTrackPlayCountElementOld(playCount) {
     return playCountElement;
 }
 
-function newDesignParser(newNodes) {
+function observeNew(designStyle) {
+    // TODO
+}
+
+function parseNew(newNodes) {
     // TODO
 }

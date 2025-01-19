@@ -1,5 +1,4 @@
 let tracks;
-let albums;
 
 (async function () {
     tracks = await import(chrome.runtime.getURL('parser/tracks.js'));
@@ -9,7 +8,7 @@ const observersMap = new Map();
 
 function handleUrlChange(url, designStyle) {
     if (url.match(/\/users\/.*\/tracks/)) {
-        updateObserverInstance('tracks', designStyle, tracks.parser);
+        updateObserverInstance('tracks', designStyle, tracks.parse);
     }
 
     if (url.match(/\/users\/.*\/albums/)) {

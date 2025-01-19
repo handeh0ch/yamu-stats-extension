@@ -14,7 +14,7 @@
     "web_accessible_resources": [
         {
             "matches": ["<all_urls>"],
-            "resources": ["parser/tracks.js"]
+            "resources": ["parser/tracks.js", "parser/albums.js"]
         }
     ],
     "author": "handeh0ch",
