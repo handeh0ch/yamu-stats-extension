@@ -63,7 +63,6 @@ function observeOld() {
 
     observer.observe(trackList, {
         childList: true,
-        subtree: true,
     });
 
     return observer;

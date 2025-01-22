@@ -42,7 +42,7 @@ function handleUrlChange(url, designStyle) {
         artists.parseArtist(designStyle);
 
         if (url.match(/\/artist\/\d+\/tracks/)) {
-            artists.parseArtistTracks(designStyle);
+            updateObserverInstance('artistTracks', designStyle, artists.getTrackListObserver);
         }
     }
 }

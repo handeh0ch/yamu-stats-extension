@@ -7,22 +7,20 @@ let elementCreator;
 })();
 
 const parserMap = new Map();
+const trackSet = new Set();
 
 parserMap.set('old', {
     parseArtist: parseArtistOld,
-    parseArtistTracks: parseAlbumTracksOld,
+    getTrackListObserver: observeArtistTrackListOld,
 });
 
 export function parseArtist(designStyle) {
-    getParser(designStyle).parseArtist();
+    parserMap.get(designStyle).parseArtist();
 }
 
-export function parseArtistTracks(designStyle) {
-    getParser(designStyle).parseArtistTracks();
-}
-
-function getParser(designStyle) {
-    return parserMap.get(designStyle);
+export function getTrackListObserver(designStyle) {
+    trackSet.clear();
+    return parserMap.get(designStyle).getTrackListObserver();
 }
 
 function parseArtistOld() {
@@ -45,7 +43,7 @@ function parseArtistOld() {
         });
 }
 
-function parseAlbumTracksOld() {
+function observeArtistTrackListOld() {
     let trackList = null;
 
     while (trackList === null) {
@@ -58,30 +56,44 @@ function parseAlbumTracksOld() {
         return;
     }
 
-    Promise.all(
+    parseArtistTracksOld(
         Array.from(document.querySelectorAll('.d-track')).map((node) => {
             const title = node.querySelector('.d-track__title')?.textContent.trim();
+            trackSet.add(`${artist} - ${title}`);
 
-            return api
-                .getTrack(artist, title)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.message) {
-                        data.playcount = 'No data';
-                    }
-
-                    node.insertBefore(
-                        elementCreator.createTrackPlayCountElementOld(data.playcount),
-                        node.querySelector('.d-track__overflowable-column')
-                    );
-                });
+            return { artist, title, node };
         })
     );
+
+    const observer = new MutationObserver((mutations) => {
+        const newTracks = [];
+
+        mutations.forEach((mutation) => {
+            Array.from(mutation.addedNodes).forEach((node) => {
+                const title = node.querySelector('.d-track__title')?.textContent.trim();
+
+                if (node.nodeType === Node.ELEMENT_NODE && !trackSet.has(`${artist} - ${title}`)) {
+                    trackSet.add(`${artist} - ${title}`);
+                    newTracks.push({ artist, title, node });
+                }
+            });
+        });
+
+        if (newTracks.length > 0) {
+            parseArtistTracksOld(newTracks);
+        }
+    });
+
+    observer.observe(trackList, {
+        childList: true,
+    });
+
+    return observer;
 }
 
-function parseOld(newTracks) {
+function parseArtistTracksOld(tracks) {
     Promise.all(
-        newTracks.map(({ artist, title, node }) => {
+        tracks.map(({ artist, title, node }) => {
             if (!artist || !title) {
                 return Promise.resolve();
             }
