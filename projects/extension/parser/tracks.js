@@ -21,6 +21,12 @@ parserMap.set('new', {
 
 export function parse(designStyle) {
     trackSet.clear();
+
+    /** Making table head columns change place */
+    document
+        .querySelector('.table-head')
+        .insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld('', false));
+
     return parserMap.get(designStyle).getObserver();
 }
 

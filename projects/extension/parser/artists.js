@@ -21,6 +21,12 @@ export function parseArtist(designStyle) {
 
 export function getTrackListObserver(designStyle) {
     trackSet.clear();
+
+    /** Making table head columns change place */
+    document
+        .querySelector('.table-head')
+        .insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld('', false));
+
     return parserMap.get(designStyle).getTrackListObserver();
 }
 

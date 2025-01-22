@@ -1,4 +1,4 @@
-export function createTrackPlayCountElementOld(playCount) {
+export function createTrackPlayCountElementOld(playCount, withSeparator = true) {
     const container = document.createElement('div');
     container.className = 'd-track__quasistatic-column';
     container.style.flex = '0 1 10%';
@@ -7,17 +7,19 @@ export function createTrackPlayCountElementOld(playCount) {
     nameElement.className = 'd-track__name';
     nameElement.title = playCount;
 
-    const separatorSpan = document.createElement('span');
-    separatorSpan.innerHTML = '|';
-    separatorSpan.style.color = '#777';
-    separatorSpan.style.marginRight = '15px';
-
     const playCountText = document.createElement('span');
     playCountText.className = 'd-track__title';
     playCountText.style.color = '#777';
     playCountText.innerHTML = playCount;
 
-    nameElement.appendChild(separatorSpan);
+    if (withSeparator) {
+        const separatorSpan = document.createElement('span');
+        separatorSpan.innerHTML = '|';
+        separatorSpan.style.color = '#777';
+        separatorSpan.style.marginRight = '15px';
+        nameElement.appendChild(separatorSpan);
+    }
+
     nameElement.appendChild(playCountText);
     container.appendChild(nameElement);
 
