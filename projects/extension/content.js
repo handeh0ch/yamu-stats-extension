@@ -43,6 +43,8 @@ function handleUrlChange(url, designStyle) {
 
         if (url.match(/\/artist\/\d+\/tracks/)) {
             updateObserverInstance('artistTracks', designStyle, artists.getTrackListObserver);
+        } else if (url.match(/\/artist\/\d+$/)) {
+            artists.parseArtistHome(designStyle);
         }
     }
 }

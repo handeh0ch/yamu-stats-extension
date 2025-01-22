@@ -1,16 +1,23 @@
-export function createTrackPlayCountElementOld(playCount, title) {
+export function createTrackPlayCountElementOld(playCount) {
     const container = document.createElement('div');
     container.className = 'd-track__quasistatic-column';
+    container.style.flex = '0 1 10%';
 
     const nameElement = document.createElement('div');
     nameElement.className = 'd-track__name';
-    nameElement.title = title;
+    nameElement.title = playCount;
+
+    const separatorSpan = document.createElement('span');
+    separatorSpan.innerHTML = '|';
+    separatorSpan.style.color = '#777';
+    separatorSpan.style.marginRight = '15px';
 
     const playCountText = document.createElement('span');
     playCountText.className = 'd-track__title';
     playCountText.style.color = '#777';
-    playCountText.textContent = playCount;
+    playCountText.innerHTML = playCount;
 
+    nameElement.appendChild(separatorSpan);
     nameElement.appendChild(playCountText);
     container.appendChild(nameElement);
 
@@ -20,7 +27,6 @@ export function createTrackPlayCountElementOld(playCount, title) {
 export function createAlbumPlayCountElementOld(playCount) {
     const container = document.createElement('div');
     container.className = 'd-album-summary d-album-summary__large';
-    container.setAttribute('data-b', '2253');
 
     const group = document.createElement('div');
     group.className = 'd-album-summary__group d-album-summary__item typo-disabled';
@@ -42,26 +48,6 @@ export function createAlbumPlayCountElementOld(playCount) {
     group.appendChild(link);
 
     container.appendChild(group);
-
-    return container;
-}
-
-export function createAlbumTrackPlayCountElementOld(playCount, title) {
-    const container = document.createElement('div');
-    container.className = 'd-track__quasistatic-column';
-    container.style.flex = '0 1 10%';
-
-    const nameElement = document.createElement('div');
-    nameElement.className = 'd-track__name';
-    nameElement.title = title;
-
-    const playCountText = document.createElement('span');
-    playCountText.className = 'd-track__title';
-    playCountText.style.color = '#777';
-    playCountText.innerHTML = `&#9;|&#9;${playCount}`;
-
-    nameElement.appendChild(playCountText);
-    container.appendChild(nameElement);
 
     return container;
 }

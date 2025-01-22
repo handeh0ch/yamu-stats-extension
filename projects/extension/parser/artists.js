@@ -11,6 +11,7 @@ const trackSet = new Set();
 
 parserMap.set('old', {
     parseArtist: parseArtistOld,
+    parseArtistHome: parseArtistHomeOld,
     getTrackListObserver: observeArtistTrackListOld,
 });
 
@@ -21,6 +22,10 @@ export function parseArtist(designStyle) {
 export function getTrackListObserver(designStyle) {
     trackSet.clear();
     return parserMap.get(designStyle).getTrackListObserver();
+}
+
+export function parseArtistHome(designStyle) {
+    parserMap.get(designStyle).parseArtistHome();
 }
 
 function parseArtistOld() {
@@ -62,7 +67,8 @@ function observeArtistTrackListOld() {
             trackSet.add(`${artist} - ${title}`);
 
             return { artist, title, node };
-        })
+        }),
+        insertTrack
     );
 
     const observer = new MutationObserver((mutations) => {
@@ -80,7 +86,7 @@ function observeArtistTrackListOld() {
         });
 
         if (newTracks.length > 0) {
-            parseArtistTracksOld(newTracks);
+            parseArtistTracksOld(newTracks, insertTrack);
         }
     });
 
@@ -91,7 +97,11 @@ function observeArtistTrackListOld() {
     return observer;
 }
 
-function parseArtistTracksOld(tracks) {
+function insertTrack(node, playCount) {
+    node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld(playCount));
+}
+
+function parseArtistTracksOld(tracks, insertNode) {
     Promise.all(
         tracks.map(({ artist, title, node }) => {
             if (!artist || !title) {
@@ -107,12 +117,24 @@ function parseArtistTracksOld(tracks) {
                     }
 
                     trackSet.add(`${artist} - ${title}`);
-
-                    node.insertBefore(
-                        elementCreator.createTrackPlayCountElementOld(data.playcount),
-                        node.querySelector('.d-track__overflowable-column')
-                    );
+                    insertNode(node, data.playcount);
                 });
         })
+    );
+}
+
+function parseArtistHomeOld() {
+    const artist = document.querySelector('.page-artist__title')?.textContent.trim();
+
+    parseArtistTracksOld(
+        Array.from(document.querySelectorAll('.d-track')).map((node) => {
+            const title = node.querySelector('.d-track__title')?.textContent.trim();
+            trackSet.add(`${artist} - ${title}`);
+
+            return { artist, title, node };
+        }),
+        (node, playCount) => {
+            node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld(playCount));
+        }
     );
 }

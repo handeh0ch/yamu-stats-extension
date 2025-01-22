@@ -81,7 +81,7 @@ function parseAlbumTracksOld() {
 
                     node.querySelector('.d-track__overflowable-column').insertAdjacentElement(
                         'beforeend',
-                        elementCreator.createAlbumTrackPlayCountElementOld(data.playcount, title)
+                        elementCreator.createTrackPlayCountElementOld(data.playcount, title)
                     );
                 });
         })

@@ -85,9 +85,9 @@ function parseOld(newTracks) {
 
                     trackSet.add(`${artist} - ${title}`);
 
-                    node.insertBefore(
-                        elementCreator.createTrackPlayCountElementOld(data.playcount),
-                        node.querySelector('.d-track__overflowable-column')
+                    node.insertAdjacentElement(
+                        'beforeend',
+                        elementCreator.createTrackPlayCountElementOld(data.playcount)
                     );
                 });
         })
