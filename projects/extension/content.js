@@ -55,13 +55,21 @@ function updateObserverInstance(key, designStyle, observer) {
     observersMap.set(key, observer(designStyle));
 }
 
-(function bootstrap() {
+(async function bootstrap() {
     let currentUrl = null;
+    let designStyle = 'old';
+
+    await new Promise((resolve) => {
+        chrome.runtime.onMessage.addListener((request, sender) => {
+            designStyle = request.designStyle;
+            resolve();
+        });
+    });
 
     const observer = new MutationObserver(() => {
         if (location.href !== currentUrl) {
             setTimeout(() => {
-                handleUrlChange(location.href, 'old');
+                handleUrlChange(location.href, designStyle);
             }, 1000);
             currentUrl = location.href;
         }
