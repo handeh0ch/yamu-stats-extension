@@ -20,6 +20,14 @@ function handleUrlChange(url, designStyle) {
         return;
     }
 
+    if (url.match(/\/playlists\/lk\.[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/)) {
+        currentAlbumId = null;
+        currentArtistId = null;
+        updateObserverInstance('tracks', designStyle, tracks.parse);
+
+        return;
+    }
+
     const albumMatch = url.match(/\/album\/\d+/);
     if (albumMatch) {
         currentArtistId = null;

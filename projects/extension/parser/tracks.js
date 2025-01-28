@@ -11,21 +11,21 @@ const trackSet = new Set();
 
 parserMap.set('old', {
     getObserver: observeOld,
-    parse: parseOld,
 });
 
 parserMap.set('new', {
     getObserver: observeNew,
-    parse: parseNew,
 });
 
 export function parse(designStyle) {
     trackSet.clear();
 
-    /** Making table head columns change place */
-    document
-        .querySelector('.table-head')
-        .insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld('', false));
+    if (designStyle === 'old') {
+        /** Making table head columns change place */
+        document
+            .querySelector('.table-head')
+            .insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld('', false));
+    }
 
     return parserMap.get(designStyle).getObserver();
 }
@@ -37,14 +37,15 @@ function observeOld() {
         trackList = document.querySelector('.lightlist__cont');
     }
 
-    parseOld(
-        Array.from(document.querySelectorAll('.d-track')).map((node) => {
+    fetchTracks(
+        Array.from(trackList.querySelectorAll('.d-track')).map((node) => {
             const artist = node.querySelector('.d-track__artists > a')?.textContent.trim();
             const title = node.querySelector('.d-track__title')?.textContent.trim();
             trackSet.add(`${artist} - ${title}`);
 
             return { artist, title, node };
-        })
+        }),
+        insertNodeOld
     );
 
     const observer = new MutationObserver((mutations) => {
@@ -63,7 +64,7 @@ function observeOld() {
         });
 
         if (newTracks.length > 0) {
-            parseOld(newTracks);
+            fetchTracks(newTracks, insertNodeOld);
         }
     });
 
@@ -74,7 +75,70 @@ function observeOld() {
     return observer;
 }
 
-function parseOld(newTracks) {
+function observeNew() {
+    let trackList = null;
+
+    while (trackList === null) {
+        trackList = document.querySelector('.PlaylistPage_content__T7zOm');
+    }
+
+    fetchTracks(
+        Array.from(trackList.querySelectorAll('.HorizontalCardContainer_root__YoAAP')).map((node) => {
+            const artist = node.querySelector('.Meta_artistCaption__JESZi')?.textContent.trim();
+            const title = node.querySelector('.Meta_title__GGBnH')?.textContent.trim();
+            trackSet.add(`${artist} - ${title}`);
+
+            return { artist, title, node };
+        }),
+        insertNodeNew
+    );
+
+    const observer = new MutationObserver(async (mutations) => {
+        const newTracks = [];
+        const promises = [];
+
+        mutations.forEach((mutation) => {
+            Array.from(mutation.addedNodes).forEach((node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return;
+                }
+
+                const promise = new Promise((resolve) => {
+                    const interval = setInterval(() => {
+                        const artist = node.querySelector('.Meta_artistCaption__JESZi')?.textContent.trim();
+                        const title = node.querySelector('.Meta_title__GGBnH')?.textContent.trim();
+
+                        if (artist && title) {
+                            newTracks.push({
+                                artist,
+                                title,
+                                node: node.querySelector('.HorizontalCardContainer_root__YoAAP'),
+                            });
+                            clearInterval(interval);
+                            resolve();
+                        }
+                    }, 200);
+                });
+
+                promises.push(promise);
+            });
+        });
+
+        await Promise.all(promises);
+
+        if (newTracks.length > 0) {
+            fetchTracks(newTracks, insertNodeNew);
+        }
+    });
+
+    observer.observe(trackList, {
+        childList: true,
+    });
+
+    return observer;
+}
+
+function fetchTracks(newTracks, insertNode) {
     Promise.all(
         newTracks.map(({ artist, title, node }) => {
             if (!artist || !title) {
@@ -90,20 +154,16 @@ function parseOld(newTracks) {
                     }
 
                     trackSet.add(`${artist} - ${title}`);
-
-                    node.insertAdjacentElement(
-                        'beforeend',
-                        elementCreator.createTrackPlayCountElementOld(data.playcount)
-                    );
+                    insertNode(node, data.playcount);
                 });
         })
     );
 }
 
-function observeNew(designStyle) {
-    // TODO
+function insertNodeOld(node, playCount) {
+    node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld(playCount));
 }
 
-function parseNew(newNodes) {
-    // TODO
+function insertNodeNew(node, playCount) {
+    node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementNew(playCount));
 }

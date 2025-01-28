@@ -26,6 +26,26 @@ export function createTrackPlayCountElementOld(playCount, withSeparator = true) 
     return container;
 }
 
+export function createTrackPlayCountElementNew(playCount, withSeparator = true) {
+    const container = document.createElement('div');
+    container.style.flex = '0.1';
+
+    if (withSeparator) {
+        const separatorSpan = document.createElement('span');
+        separatorSpan.innerHTML = '|';
+        separatorSpan.style.color = '#777';
+        separatorSpan.style.margin = '0 15px';
+        container.appendChild(separatorSpan);
+    }
+
+    const timeSpan = document.createElement('span');
+    timeSpan.textContent = playCount;
+
+    container.appendChild(timeSpan);
+
+    return container;
+}
+
 export function createAlbumPlayCountElementOld(playCount) {
     const container = document.createElement('div');
     container.className = 'd-album-summary d-album-summary__large';
