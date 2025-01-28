@@ -106,3 +106,49 @@ export function createArtistPlayCountElementOld(playCount) {
 
     return container;
 }
+
+export function createArtistPlayCountElementNew(playCount) {
+    const container = document.createElement('div');
+    container.className = 'PageHeaderArtist_meta__ZAlx_';
+    container.style.marginTop = 'var(--ym-spacer-size-m)';
+
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'PageHeaderArtist_label__rXyrB';
+
+    const svg = document.createElement('svg');
+    svg.classList.add('Rkdd2vKC_3xa1eUdRdHP');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.padding = 'var(--ym-icon-padding, 0)';
+
+    const descriptionSpan = document.createElement('span');
+    descriptionSpan.textContent = 'Last.fm';
+    descriptionSpan.style.color = '#777';
+    descriptionSpan.className = '_3_Mxw7Si7j2g4kWjlpR';
+
+    const separator = document.createElement('span');
+    separator.style.display = 'inline-block';
+    separator.style.width = '2px';
+    separator.style.height = '2px';
+    separator.style.margin = '-2px 6px 0';
+    separator.style.content = '""';
+    separator.style.overflow = 'hidden';
+    separator.style.verticalAlign = 'middle';
+    separator.style.backgroundColor = '#d8d8d8';
+    separator.style.borderRadius = '100%';
+    separator.className = '_3_Mxw7Si7j2g4kWjlpR';
+    separator.innerHTML = '&nbsp;';
+
+    const playCountSpan = document.createElement('span');
+    playCountSpan.textContent = playCount;
+    playCountSpan.style.color = '#777';
+    playCountSpan.className = '_3_Mxw7Si7j2g4kWjlpR';
+
+    labelDiv.appendChild(descriptionSpan);
+    labelDiv.appendChild(separator);
+    labelDiv.appendChild(playCountSpan);
+
+    container.appendChild(labelDiv);
+
+    return container;
+}
