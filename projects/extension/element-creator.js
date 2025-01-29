@@ -26,18 +26,9 @@ export function createTrackPlayCountElementOld(playCount, withSeparator = true) 
     return container;
 }
 
-export function createTrackPlayCountElementNew(playCount, withSeparator = true) {
+export function createTrackPlayCountElementNew(playCount) {
     const container = document.createElement('div');
     container.style.flex = '0.1';
-
-    if (withSeparator) {
-        const separatorSpan = document.createElement('span');
-        separatorSpan.innerHTML = '|';
-        separatorSpan.style.color = '#777';
-        separatorSpan.style.margin = '0 15px';
-        container.appendChild(separatorSpan);
-    }
-
     const timeSpan = document.createElement('span');
     timeSpan.textContent = playCount;
 
@@ -110,20 +101,13 @@ export function createArtistPlayCountElementOld(playCount) {
 export function createArtistPlayCountElementNew(playCount) {
     const container = document.createElement('div');
     container.className = 'PageHeaderArtist_meta__ZAlx_';
-    container.style.marginTop = 'var(--ym-spacer-size-m)';
+    container.style.marginTop = 'var(--ym-spacer-size-s)';
 
     const labelDiv = document.createElement('div');
     labelDiv.className = 'PageHeaderArtist_label__rXyrB';
 
-    const svg = document.createElement('svg');
-    svg.classList.add('Rkdd2vKC_3xa1eUdRdHP');
-    svg.setAttribute('focusable', 'false');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.style.padding = 'var(--ym-icon-padding, 0)';
-
     const descriptionSpan = document.createElement('span');
     descriptionSpan.textContent = 'Last.fm';
-    descriptionSpan.style.color = '#777';
     descriptionSpan.className = '_3_Mxw7Si7j2g4kWjlpR';
 
     const separator = document.createElement('span');
@@ -141,7 +125,6 @@ export function createArtistPlayCountElementNew(playCount) {
 
     const playCountSpan = document.createElement('span');
     playCountSpan.textContent = playCount;
-    playCountSpan.style.color = '#777';
     playCountSpan.className = '_3_Mxw7Si7j2g4kWjlpR';
 
     labelDiv.appendChild(descriptionSpan);

@@ -165,5 +165,8 @@ function insertNodeOld(node, playCount) {
 }
 
 function insertNodeNew(node, playCount) {
-    node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementNew(playCount));
+    node.insertBefore(
+        elementCreator.createTrackPlayCountElementNew(playCount),
+        node.querySelector('.ControlsBar_root__5HK2B')
+    );
 }
