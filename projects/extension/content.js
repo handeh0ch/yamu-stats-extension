@@ -12,7 +12,7 @@ let currentAlbumId = null;
 const observersMap = new Map();
 
 function handleUrlChange(url, designStyle) {
-    if (url.match(/\/users\/.*\/tracks/)) {
+    if (url.match(/\/users\/.*\/tracks/) && designStyle === 'old') {
         currentAlbumId = null;
         currentArtistId = null;
         updateObserverInstance('tracks', designStyle, tracks.parse);
