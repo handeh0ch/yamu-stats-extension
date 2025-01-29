@@ -45,7 +45,7 @@ function observeOld() {
 
             return { artist, title, node };
         }),
-        insertNodeOld
+        insertTrackOld
     );
 
     const observer = new MutationObserver((mutations) => {
@@ -64,7 +64,7 @@ function observeOld() {
         });
 
         if (newTracks.length > 0) {
-            fetchTracks(newTracks, insertNodeOld);
+            fetchTracks(newTracks, insertTrackOld);
         }
     });
 
@@ -90,7 +90,7 @@ function observeNew() {
 
             return { artist, title, node };
         }),
-        insertNodeNew
+        insertTrackNew
     );
 
     const observer = new MutationObserver(async (mutations) => {
@@ -127,7 +127,7 @@ function observeNew() {
         await Promise.all(promises);
 
         if (newTracks.length > 0) {
-            fetchTracks(newTracks, insertNodeNew);
+            fetchTracks(newTracks, insertTrackNew);
         }
     });
 
@@ -160,11 +160,11 @@ function fetchTracks(newTracks, insertNode) {
     );
 }
 
-function insertNodeOld(node, playCount) {
+function insertTrackOld(node, playCount) {
     node.insertAdjacentElement('beforeend', elementCreator.createTrackPlayCountElementOld(playCount));
 }
 
-function insertNodeNew(node, playCount) {
+function insertTrackNew(node, playCount) {
     node.insertBefore(
         elementCreator.createTrackPlayCountElementNew(playCount),
         node.querySelector('.ControlsBar_root__5HK2B')

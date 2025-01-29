@@ -39,7 +39,11 @@ function handleUrlChange(url, designStyle) {
 
         currentAlbumId = albumId;
         albums.parseAlbum(designStyle);
-        albums.parseAlbumTracks(designStyle);
+        if (designStyle === 'old') {
+            albums.parseAlbumTracks(designStyle);
+        } else {
+            updateObserverInstance('albumTracks', designStyle, albums.parseAlbumTracks);
+        }
 
         return;
     }

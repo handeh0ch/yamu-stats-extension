@@ -98,10 +98,15 @@ export function createArtistPlayCountElementOld(playCount) {
     return container;
 }
 
-export function createArtistPlayCountElementNew(playCount) {
+export function createHeaderPlayCountElementNew(playCount, isMarginTop) {
     const container = document.createElement('div');
     container.className = 'PageHeaderArtist_meta__ZAlx_';
-    container.style.marginTop = 'var(--ym-spacer-size-s)';
+
+    if (isMarginTop) {
+        container.style.marginTop = 'var(--ym-spacer-size-s)';
+    } else {
+        container.style.marginBottom = 'var(--ym-spacer-size-s)';
+    }
 
     const labelDiv = document.createElement('div');
     labelDiv.className = 'PageHeaderArtist_label__rXyrB';

@@ -131,7 +131,7 @@ function parseArtistNew() {
     parseArtistInfo(artist, (playcount) => {
         document
             .querySelector('.PageHeaderBase_meta__bMvfR')
-            .insertAdjacentElement('beforeend', elementCreator.createArtistPlayCountElementNew(playcount));
+            .insertAdjacentElement('beforeend', elementCreator.createHeaderPlayCountElementNew(playcount, true));
     });
 }
 
