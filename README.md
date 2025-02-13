@@ -28,13 +28,16 @@ Statistic provider is Last.fm API.
 
 | Old design | New design |
 | ------------- | ------------- |
-| ![image](https://github.com/user-attachments/assets/6445f58d-d7fd-4ab8-93e1-95cd1e8c6b52) | TODO... |
+| ![image](https://github.com/user-attachments/assets/6445f58d-d7fd-4ab8-93e1-95cd1e8c6b52) | ![image](https://github.com/user-attachments/assets/db02cdd0-f0a0-4ce2-8ee2-d242180e17ba) |
 
 **6. Requests caching on backend side**
 
 ## Installation
 
-TODO...
+1. Download ZIP
+2. Open `chrome://extensions/`
+3. Enable developer mode
+4. Click 'Load unpacked extension' and choose `yamu-stats-extension\projects\extension` folder
 
 ## Roadmap
 
